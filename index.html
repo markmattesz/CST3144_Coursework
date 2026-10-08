@@ -54,6 +54,7 @@
             border-radius: 5px;
             background-color: #333;
             color: white;
+            margin-top: 10px;
         }
 
         button:disabled {
@@ -66,7 +67,9 @@
 <body>
 
     <div id="app">
-        <div class="lesson">
+
+        <!-- Lesson information is displayed when displayCart is false -->
+        <div v-if="!displayCart" class="lesson">
 
             <img 
                 class="lesson-image"
@@ -94,6 +97,21 @@
             </button>
 
         </div>
+
+        <!-- Checkout placeholder is displayed when displayCart is true -->
+        <div v-else class="lesson">
+            <h1>Checkout</h1>
+            <p>Checkout placeholder</p>
+        </div>
+
+        <!-- Checkout button -->
+        <button 
+            @click="toggleCart"
+            :disabled="numberOfItems === 0"
+        >
+            Checkout ({{ numberOfItems }})
+        </button>
+
     </div>
 
     <script>
@@ -110,7 +128,9 @@
                         imageAlt: "Students learning computer science"
                     },
 
-                    cart: []
+                    cart: [],
+
+                    displayCart: false
                 };
             },
 
@@ -118,12 +138,20 @@
                 addToCart() {
                     this.cart.push(this.lesson.id);
                     this.lesson.availability--;
+                },
+
+                toggleCart() {
+                    this.displayCart = !this.displayCart;
                 }
             },
 
             computed: {
                 canAddToCart() {
                     return this.lesson.availability > 0;
+                },
+
+                numberOfItems() {
+                    return this.cart.length;
                 }
             }
         });
